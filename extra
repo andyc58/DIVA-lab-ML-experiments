@@ -1,0 +1,56 @@
+# def generate_train_test_pairs():
+#     for t1 in range(len(sessions)):
+#         for t2 in range(len(sessions)):
+#             if t1 != t2:
+#                 yield sessions[t1], sessions[t2]
+
+# def split(train_test_pairs):
+#     for p1, p2 in train_test_pairs:
+#         train = pd.read_csv(os.path.join(data_dir, f"type_{p1}_df.csv"))
+#         test = pd.read_csv(os.path.join(data_dir, f"type_{p2}_df.csv"))
+        
+        
+#         numerical_cols = train.select_dtypes(include=np.number).columns.tolist()
+#         for col in numerical_cols:
+#             if train[col].isnull().any():
+#                 mean_val = train[col].mean()
+#                 train.fillna({col:mean_val}, inplace=True)
+ 
+#         numerical_cols = test.select_dtypes(include=np.number).columns.tolist()
+#         for col in numerical_cols:
+#             if test[col].isnull().any():
+#                 mean_val = test[col].mean()
+#                 test.fillna({col:mean_val}, inplace=True)
+                
+#         yield p1, train, p2, test
+        
+        
+        
+
+# def select_by_body(splits):
+#     for p1, train, p2, test in splits:
+#         for name, r in body_regex_map.items():
+#             X_p1 = train.filter(regex=r, axis=1)
+#             X_p2 = test.filter(regex=r, axis=1)
+#             y_p1 = train["ETHNICITY_ENC"]
+#             y_p2 = test["ETHNICITY_ENC"]
+#             results[name][f"{p1} | {p2}"] = {}
+            
+            
+#             yield ((name, f"{p1} | {p2}"),(X_p1, X_p2), (y_p1, y_p2))
+
+# def train(names, X, y):
+    
+#     X_train, X_test = X
+#     y_train, y_test = y
+#     for model in models:
+#         results[names[0]][names[1]][model] = {}
+        
+       
+
+
+
+
+# train_test_pairs = generate_train_test_pairs()
+# split_data = split(train_test_pairs)
+# names, X, y = select_by_body(split_data)
