@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
 from pprint import pprint
-
+import asyncio
 from MLExperiment import Experiment
 from Evaluator import ModelEvaluator
 
@@ -53,5 +53,5 @@ body_regex_map = {"Full": "Head|Hand|Hips|Foot",
 
 evaluator = ModelEvaluator(models)
 experiment = Experiment(data_dir, evaluator, sessions, body_regex_map)
-experiment.run()
+asyncio.run(experiment.run())
 pprint(experiment.results)

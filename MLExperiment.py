@@ -70,23 +70,26 @@ class Experiment:
 
 
 
-    def run(self):
+
+    async def run(self):
         done = False
         for part in self.results:
             regex = self.results[part]['regex']
-            
+
             for split in self.results[part][self.split_store_key]:
+                sample = f"{part}/{split.replace('|', '_')}"
                 train_df, test_df = self.loader.get_pair(*split.split('|'))
+
                 X_train = train_df.filter(regex=regex, axis=1)
                 y_train = train_df['ETHNICITY_ENC']
                 X_test = test_df.filter(regex=regex, axis=1)
                 y_test = test_df['ETHNICITY_ENC']
 
-                model_results = self.evaluator.evaluate(X_train, X_test, y_train, y_test)
+                model_results = await self.evaluator.evaluate(X_train, X_test, y_train, y_test, sample)
                 self.results[part][self.split_store_key][split] = model_results
                 done = True
                 break
-            if done: 
+            if done:
                 break
                 
     
