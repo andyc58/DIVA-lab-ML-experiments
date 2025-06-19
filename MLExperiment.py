@@ -2,7 +2,8 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 import numpy as np
-
+import json
+from Evaluator import ModelEvaluator 
 
 class ResultBuilder:
     @classmethod
@@ -11,7 +12,6 @@ class ResultBuilder:
         for key, v in regex_map.items():
             results[key] = {"regex": v, data_key: {}}
         return results
-
 
 
 
@@ -48,9 +48,11 @@ class DataLoader:
 
 class Experiment:
     
-    def __init__(self, data_path, evaluator, sessions, regex_map) -> None:
+    def __init__(self, data_path, results_dir, models, sessions, regex_map) -> None:
         self.split_store_key="splits"
-        self.evaluator = evaluator
+        self.results_dir = results_dir
+        self.evaluator = ModelEvaluator(models, results_dir)
+        
         print(f"Evaluating {len(self.evaluator.models)} classification models")
         self.data_path = data_path
         self.sessions = sessions
@@ -72,7 +74,7 @@ class Experiment:
 
 
     async def run(self):
-        done = False
+        
         for part in self.results:
             regex = self.results[part]['regex']
 
@@ -87,10 +89,11 @@ class Experiment:
 
                 model_results = await self.evaluator.evaluate(X_train, X_test, y_train, y_test, sample)
                 self.results[part][self.split_store_key][split] = model_results
-                done = True
-                break
-            if done:
-                break
+ 
+                
+    def save_results(self):
+        with open(os.path.join(self.results_dir, "results.json"), 'w') as f:
+            json.dump(self.results, f)
                 
     
         

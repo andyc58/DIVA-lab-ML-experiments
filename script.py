@@ -13,14 +13,6 @@ from Evaluator import ModelEvaluator
 
 load_dotenv()
 
-data_dir = os.environ.get('DATA_DIR')
-RAND_STATE = 42
-
-models = [RandomForestClassifier(n_estimators=100, random_state=RAND_STATE, verbose=1),
-          KNeighborsClassifier(n_neighbors=5,n_jobs=8), 
-          XGBClassifier(random_state=RAND_STATE)]
-
-
 
 
 """
@@ -33,25 +25,29 @@ Need
 5. left + right foot
 """
 
-# ['A', 'E', 'G', 'N']
+
+
+data_dir = os.environ.get('DATA_DIR')
+RAND_STATE = 42
+
+models = [
+          RandomForestClassifier(n_estimators=100, random_state=RAND_STATE, verbose=1),
+          KNeighborsClassifier(n_neighbors=5,n_jobs=8), 
+          XGBClassifier(random_state=RAND_STATE)
+      ]
+
+
 sessions = ['A', 'E', 'G', 'N']
 
-body_regex_map = {"Full": "Head|Hand|Hips|Foot",
-                 "Headset": "Head",
-                 "Controller": "Hand",
-                 "Headset and Controller":"Head|Hand",
-                 "Foot": "Foot"
-}
-
-
-body_regex_map = {"Full": "Head|Hand|Hips|Foot",
+body_regex_map = {
+            "Full": "Head|Hand|Hips|Foot",
             "Headset": "Head",
             "Controller": "Hand",
             "Headset and Controller":"Head|Hand",
             "Foot": "Foot"
-}
+            }
 
-evaluator = ModelEvaluator(models)
-experiment = Experiment(data_dir, evaluator, sessions, body_regex_map)
+results_dir = './results/'
+experiment = Experiment(data_dir, results_dir, models, sessions, body_regex_map)
 asyncio.run(experiment.run())
-pprint(experiment.results)
+experiment.save_results()
